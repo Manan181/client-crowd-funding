@@ -1,0 +1,21 @@
+<app-loading *ngIf="isLoading">{{ isLoading }}</app-loading>
+
+<div class="modal">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" #closebutton class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">Milestone Form</h4>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onSubmit()">
+				<label for="milestoneCID">Milestone CID:</label>
+				<input type="text" id="milestoneCID" [(ngModel)]="formData.milestoneCID" name="milestoneCID" required />
+
+				<label for="votingPeriod">Voting Period:</label>
+				<input type="text" id="votingPeriod" [(ngModel)]="formData.votingPeriod" name="votingPeriod" required />
+
+				<button type="submit">Submit</button>
+			</form>
+		</div>
+	</div>
+</div>

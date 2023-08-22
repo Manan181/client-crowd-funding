@@ -1,0 +1,27 @@
+<app-loading *ngIf="isLoading">{{ isLoading }}</app-loading>
+
+<div class="modal">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" #closebutton class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">Campaign Form</h4>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onSubmit()">
+				<label for="fundingCID">Funding CID:</label>
+				<input type="text" id="fundingCID" [(ngModel)]="formData.fundingCID" name="fundingCID" required />
+
+				<label for="amountToRaise">Amount To Raise:</label>
+				<input type="text" id="amountToRaise" [(ngModel)]="formData.amountToRaise" name="amountToRaise" required />
+
+				<label for="value">Value:</label>
+				<input type="text" id="value" [(ngModel)]="formData.value" name="value" required />
+
+				<label for="duration">Duration:</label>
+				<input type="text" id="duration" [(ngModel)]="formData.duration" name="duration" required />
+
+				<button type="submit">Submit</button>
+			</form>
+		</div>
+	</div>
+</div>

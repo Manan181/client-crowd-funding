@@ -1,1 +1,74 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
+
+* {
+	font-family: 'Poppins', sans-serif;
+	box-sizing: border-box;
+}
+html,
+body {
+	height: 100%;
+	font-family: 'Poppins', sans-serif;
+	margin: 0;
+}
+
+.basic-container {
+	padding: 5px;
+}
+
+.version-info {
+	font-size: 8pt;
+	float: right;
+}
+.mat-mdc-card {
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+	border-radius: 6px;
+}
+.mdc-card__actions {
+	padding: 8px 16px !important;
+}
+.mdc-card__actions input,
+.mdc-card__actions select {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 8px;
+	min-height: 30px;
+	width: calc(100% - 150px);
+	outline: none;
+}
+.mdc-card__actions button {
+	background: #3f51b5;
+	color: white !important;
+	min-width: 150px;
+	min-height: 40px !important;
+	border-radius: 0 6px 6px 0;
+}
+.action {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 16px 20px 16px !important;
+}
+.action .mdc-card__actions {
+	width: 50%;
+	padding: 0 !important;
+}
+.action .mdc-card__actions button {
+	width: 100%;
+	border-radius: 6px;
+	min-height: 55px !important;
+}
+.action .mdc-card__actions:first-child {
+	padding-right: 8px !important;
+}
+.action .mdc-card__actions:last-child {
+	padding-left: 8px !important;
+}
+.action .mdc-card__actions:last-child button {
+	background: transparent;
+	border: 1px solid #3f51b5;
+	color: #3f51b5 !important;
+}
+.fun-raiser button {
+	min-height: 55px !important;
+}

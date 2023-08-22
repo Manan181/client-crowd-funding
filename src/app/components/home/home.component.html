@@ -1,0 +1,81 @@
+<app-loading *ngIf="isLoading">{{ isLoading }}</app-loading>
+
+<div class="fun-raiser">
+	<button mat-raised-button color="primary" (click)="openCrowdFundingContractModal()">
+		<span style="font-size: 24px">Create a Fund Raiser</span>
+	</button>
+</div>
+<div>
+	<h2>
+		Campaigns List: <button (click)="getCampaigns()"><i class="fa fa-refresh" style="font-size: 24px"></i></button>
+	</h2>
+	<div class="content" fxLayout="row wrap" fxLayoutGap="16px grid">
+		<div [fxFlex]="100 / gridColumns + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let campaign of campaignsList; let i = index">
+			<mat-card class="mat-elevation-z4">
+				<mat-card-header>
+					<mat-card-title>
+						<b> Campaign {{ i + 1 }}</b>
+					</mat-card-title>
+				</mat-card-header>
+				<mat-card-content>
+					<p>Campaign Address: {{ campaign?.campaignAddress }}</p>
+				</mat-card-content>
+				<mat-card-content>
+					<p>Campaign Owner: {{ campaign?.campaignOwner }}</p>
+				</mat-card-content>
+				<mat-card-content>
+					<p>Campaign Duration: {{ campaign?.campaignDuration }}</p>
+				</mat-card-content>
+				<mat-card-content>
+					<p>Campaign Target Amount: {{ campaign?.campaignTargetAmount }}</p>
+				</mat-card-content>
+				<mat-card-content>
+					<p>Funding CID: {{ campaign?.fundingCID }}</p>
+				</mat-card-content>
+				<mat-card-content>
+					<p>Number Of Donors: {{ campaign?.noOfDonors }}</p>
+				</mat-card-content>
+				<mat-card-content>
+					<p>Received Donation: {{ campaign?.receivedDonation }}</p>
+				</mat-card-content>
+				<mat-card-content>
+					<p>Current Milestone:</p>
+					<ul>
+						<li>Milestone CID: {{ campaign.currentMilestone.milestoneCID }}</li>
+						<li>Approved: {{ campaign.currentMilestone.approved }}</li>
+						<li>Voting Period: {{ campaign.currentMilestone.votingPeriod }}</li>
+						<li>Status: {{ campaign.currentMilestone.status }}</li>
+						<li>Votes: {{ campaign.currentMilestone.votes }}</li>
+					</ul>
+				</mat-card-content>
+				<mat-card-content>
+					<p>Has Campaign Ended: {{ campaign?.hasCampaignEnded }}</p>
+				</mat-card-content>
+				<mat-card-actions>
+					<input type="text" placeholder="Donate" #donationInput />
+					<button mat-button (click)="donate(campaign.campaignAddress, donationInput.value)">DONATE</button>
+				</mat-card-actions>
+
+				<mat-card-actions *ngIf="campaign.currentMilestone.status !== '--'">
+					<select #voteId>
+						<option *ngFor="let vote of voteOptions; let i = index" [value]="vote.code" [selected]="i == 0">
+							{{ vote.value }}
+						</option>
+					</select>
+					<button mat-button (click)="voteOnMilestone(campaign.campaignAddress, voteId.value)">Vote Milestone</button>
+				</mat-card-actions>
+				<div class="action">
+					<mat-card-actions>
+						<button mat-button (click)="openCreateMilestoneModal(campaign.campaignAddress)">Create Milestone</button>
+					</mat-card-actions>
+					<mat-card-actions>
+						<button mat-button (click)="withdrawMilestone(campaign.campaignAddress)">Withdraw Milestone</button>
+					</mat-card-actions>
+				</div>
+				<mat-card-actions *ngIf="false">
+					<button mat-button (click)="withdrawFunds(campaign.campaignAddress)">Withdraw Funds</button>
+				</mat-card-actions>
+			</mat-card>
+		</div>
+	</div>
+</div>

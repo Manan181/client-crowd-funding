@@ -1,0 +1,9 @@
+<nav class="navbar">
+  <div class="app-name">Crowd Funding</div>
+  <div class="dynamic-content">
+    <button class="dynamic-button" *ngIf="!walletConnected; else walletIdElement" (click)="connectToWallet()">Connect Wallet</button>
+    <ng-template #walletIdElement>
+      {{walletId}}
+    </ng-template>
+  </div>
+</nav>

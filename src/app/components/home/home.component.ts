@@ -5,18 +5,7 @@ import { WalletService } from 'src/app/services/wallet.service';
 import { CreateCrowdfundingModalComponent } from '../create-crowdfunding-modal/create-crowdfunding-modal.component';
 import { StorageService } from 'src/app/services/storage.service';
 import { CreateMilestoneModalComponent } from '../create-milestone-modal/create-milestone-modal.component';
-
-interface CampaignDetails {
-	campaignAddress: string;
-	campaignOwner: string;
-	campaignDuration: string;
-	campaignTargetAmount: string;
-	fundingCID: string;
-	noOfDonors: string;
-	receivedDonation: string;
-	currentMilestone: any;
-	hasCampaignEnded: string;
-}
+import { CampaignDetails } from '../../states/campaign.state';
 
 @Component({
 	selector: 'app-home',
@@ -41,7 +30,6 @@ export class HomeComponent implements OnInit {
 			{ code: 1, value: true },
 			{ code: 2, value: false },
 		];
-		
 	}
 
 	ngOnInit(): void {
@@ -67,7 +55,6 @@ export class HomeComponent implements OnInit {
 			for (let campaignAddress of campaignsList) {
 				const params = { campaignAddress };
 				const campaignDetails = await this.apiService.getCampaignDetails(params);
-				console.log('🚀 ~ file: home.component.ts:69 ~ HomeComponent ~ fetchAllCampaignDetails ~ campaignDetails:', campaignDetails);
 				const votingPeriod = campaignDetails[6][2].toString();
 				let status: string;
 				if (votingPeriod > 0 && campaignDetails[6][3] === 0) {
@@ -79,14 +66,16 @@ export class HomeComponent implements OnInit {
 				} else {
 					status = '--';
 				}
+				console.log(campaignDetails[8]);
+				const progressValue = (campaignDetails[8] / 3) * 100;
 				const campaignDetailsObj = {
 					campaignAddress: campaignAddress,
 					campaignOwner: campaignDetails[0],
 					campaignDuration: campaignDetails[1].toString(),
-					campaignTargetAmount: `${this.walletService.convertToEther(campaignDetails[2].toString())} ETH`,
+					campaignTargetAmount: `${this.walletService.convertToEther(campaignDetails[2])} ETH`,
 					fundingCID: campaignDetails[3],
 					noOfDonors: campaignDetails[4].toString(),
-					receivedDonation: `${this.walletService.convertToEther(campaignDetails[5].toString())} ETH`,
+					receivedDonation: `${this.walletService.convertToEther(campaignDetails[5])} ETH`,
 					currentMilestone: {
 						milestoneCID: campaignDetails[6][0],
 						approved: campaignDetails[6][1] ? 'Yes' : 'No',
@@ -95,7 +84,8 @@ export class HomeComponent implements OnInit {
 						status,
 					},
 					hasCampaignEnded: campaignDetails[7],
-					withdrawalCount: campaignDetails[8] || 1
+					balance: `${this.walletService.convertToEther(campaignDetails[9])} ETH`,
+					progressValue: progressValue.toFixed(1),
 				};
 				this.storageService.addObject('campaigns', campaignDetailsObj);
 

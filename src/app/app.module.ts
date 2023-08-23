@@ -22,39 +22,27 @@ import { MatDividerModule } from "@angular/material/divider";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { LoadingComponent } from './components/loading/loading.component';
 import { CreateMilestoneModalComponent } from './components/create-milestone-modal/create-milestone-modal.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    NavComponent,
-    CreateCrowdfundingModalComponent,
-    LoadingComponent,
-    CreateMilestoneModalComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatIconModule,
-    MatDividerModule,
-    FlexLayoutModule
-  ],
-  providers: [
-    HttpClient,
-    ApiService,
-    WalletService,
-    StorageService
-  ],
-  bootstrap: [AppComponent],
-  exports:[
-      MatDialogModule
-  ]
+	declarations: [AppComponent, HomeComponent, NavComponent, CreateCrowdfundingModalComponent, LoadingComponent, CreateMilestoneModalComponent],
+	imports: [
+		BrowserModule,
+		AppRoutingModule,
+		HttpClientModule,
+		FormsModule,
+		BrowserAnimationsModule,
+		MatCardModule,
+		MatToolbarModule,
+		MatButtonModule,
+		MatMenuModule,
+		MatIconModule,
+		MatDividerModule,
+		FlexLayoutModule,
+		MatProgressBarModule,
+	],
+	providers: [HttpClient, ApiService, WalletService, StorageService],
+	bootstrap: [AppComponent],
+	exports: [MatDialogModule],
 })
-export class AppModule { }
+export class AppModule {}

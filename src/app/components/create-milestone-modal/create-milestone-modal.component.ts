@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { WalletService } from 'src/app/services/wallet.service';
 
 @Component({
 	selector: 'app-create-milestone-modal',
@@ -8,25 +9,32 @@ import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 	styleUrls: ['./create-milestone-modal.component.css'],
 })
 export class CreateMilestoneModalComponent {
-  
 	public formData = {
-		milestoneCID: 'QmVRyzazgw98tG54hPYaJsC8ssBguUjrK4cmKLqQ8fKmHw',
-		votingPeriod: '1'
+		milestoneCID: '',
+		votingPeriod: '',
 	};
 	isLoading = false;
 
-	constructor(private apiService: ApiService, public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) 
-   public campaignAddress) {}
+	constructor(
+		private apiService: ApiService,
+		public dialog: MatDialog,
+		@Inject(MAT_DIALOG_DATA) public campaignAddress,
+		@Inject(MAT_DIALOG_DATA) public milestoneCounter,
+		private walletService: WalletService
+	) {}
 
-	async onSubmit() {    
+	async onSubmit() {
+		const timestamp = await this.walletService.getLatestBlockTimeStamp();
+		const votingPeriod = Number(this.formData.votingPeriod) + timestamp;		
 		let params = {
 			milestoneCID: this.formData.milestoneCID,
-			votingPeriod: this.formData.votingPeriod,
-			campaignAddress: this.campaignAddress.campaignAddress
+			votingPeriod,
+			campaignAddress: this.campaignAddress.campaignAddress,
+			milestoneCounter: this.milestoneCounter.milestoneCounter,
 		};
 		this.isLoading = true;
 		const receipt = await this.apiService.createNewMilestone(params);
-		console.log('🚀 ~ file: create-milestone-modal.component.ts:26 ~ CreateMilestoneModalComponent ~ onSubmit ~ receipt:', receipt);
+		console.log('🚀 ~ create milestone receipt:', receipt);
 		this.isLoading = false;
 		this.closeDialog();
 	}

@@ -21,3 +21,6 @@ h2 button {
 	border: 0;
   cursor: pointer;
 }
+.popup-list {
+	cursor: pointer;
+}

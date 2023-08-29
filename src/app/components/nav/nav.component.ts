@@ -33,10 +33,6 @@ export class NavComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	private subscribeToSelectedAccount(): void {
 		this.connectedAccountSubscription = this.walletService.selectedAccount.subscribe((account) => {
-			console.log(
-				'🚀 ~ file: nav.component.ts:39 ~ NavComponent ~ this.connectedAccountSubscription=this.walletService.selectedAccount.subscribe ~ account:',
-				account
-			);
 			this.ngZone.run(() => {
 				if (account) {
 					setTimeout(() => {

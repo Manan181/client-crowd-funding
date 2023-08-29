@@ -11,7 +11,7 @@ import { StorageService } from './services/storage.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CreateCrowdfundingModalComponent } from './components/create-crowdfunding-modal/create-crowdfunding-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatCardModule } from "@angular/material/card";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -23,9 +23,20 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { LoadingComponent } from './components/loading/loading.component';
 import { CreateMilestoneModalComponent } from './components/create-milestone-modal/create-milestone-modal.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatListModule } from '@angular/material/list';
+import { PortalModule } from '@angular/cdk/portal';
 
 @NgModule({
-	declarations: [AppComponent, HomeComponent, NavComponent, CreateCrowdfundingModalComponent, LoadingComponent, CreateMilestoneModalComponent],
+	declarations: [
+		AppComponent,
+		HomeComponent,
+		NavComponent,
+		CreateCrowdfundingModalComponent,
+		LoadingComponent,
+		CreateMilestoneModalComponent,
+	],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
@@ -40,6 +51,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 		MatDividerModule,
 		FlexLayoutModule,
 		MatProgressBarModule,
+		ReactiveFormsModule,
+		OverlayModule,
+		MatTabsModule,
+		MatListModule,
+		PortalModule,
 	],
 	providers: [HttpClient, ApiService, WalletService, StorageService],
 	bootstrap: [AppComponent],

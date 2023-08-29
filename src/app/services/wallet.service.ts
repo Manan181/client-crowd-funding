@@ -66,6 +66,18 @@ export class WalletService {
 	}
 
 	public convertToWei(value) {
-    return ethers.utils.parseEther(value);
-  }
+		return ethers.utils.parseEther(value);
+	}
+	
+	public async getLatestBlockTimeStamp () {
+        try {
+			this.provider = new ethers.providers.Web3Provider(this.ethereum);			
+			const blockNumber = await this.provider.getBlockNumber();
+			const block = await this.provider.getBlock(blockNumber);
+            const timestamp = block.timestamp;
+            return timestamp;
+        } catch (error) {
+            return error;
+        }
+    }
 }

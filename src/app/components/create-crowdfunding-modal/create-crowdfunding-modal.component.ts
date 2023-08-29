@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { ethers } from 'ethers';
 import { MatDialog } from '@angular/material/dialog';
+import { WalletService } from 'src/app/services/wallet.service';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-create-crowdfunding-modal',
@@ -10,35 +12,54 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class CreateCrowdfundingModalComponent {
 	public formData = {
-		fundingCID: 'QmVRyzazgw98tG54hPYaJsC8ssBguUjrK4cmKLqQ8fKmHw',
-		amountToRaise: '1',
+		fundingCID: '',
+		amountToRaise: '',
 		value: '0.001',
-		duration: 600,
+		duration: 0,
 	};
+	public crowdfundingForm: FormGroup;
 	signer: any;
 	ethereum = window['ethereum'];
 	isLoading = false;
 
-	constructor(private apiService: ApiService, public dialog: MatDialog) {}
+	static greaterThanZero(control: AbstractControl): { [key: string]: boolean } | null {
+		if (control.value <= 0) {
+			return { greaterThanZero: true };
+		}
+		return null;
+	}
+	
+	constructor(private apiService: ApiService, public dialog: MatDialog, private walletService: WalletService, private formBuilder: FormBuilder) {
+		this.crowdfundingForm = this.formBuilder.group({
+			fundingCID: ['', Validators.required],
+			amountToRaise: ['', [Validators.required, CreateCrowdfundingModalComponent.greaterThanZero]],
+			value: ['', [Validators.required, Validators.min(0.001)]],
+			duration: ['', [Validators.required, Validators.min(1)]],
+		});
+	}
 
 	async onSubmit() {
-		const provider = new ethers.providers.Web3Provider(window['ethereum']);
-		const signer = provider.getSigner();
-		let params = {
-			fundingCID: this.formData.fundingCID,
-			amountToRaise: ethers.utils.parseEther(this.formData.amountToRaise),
-			value: ethers.utils.parseEther(this.formData.value),
-			duration: this.formData.duration,
-			signer,
-		};
-		this.isLoading = true;
-		const receipt = await this.apiService.createCrowdFundingContract(params);
-		this.isLoading = false;
-		console.log('🚀 ~ file: create-crowdfunding-modal.component.ts:36 ~ CreateCrowdfundingModalComponent ~ onSubmit ~ receipt:', receipt);
-		if (receipt) {
-			alert(`Created a new campaign with address ${receipt.logs[0].address}!`);
+		if (this.crowdfundingForm.valid) {
+			this.isLoading = true;
+			const provider = new ethers.providers.Web3Provider(window['ethereum']);
+			const signer = provider.getSigner();
+			let params = {
+				fundingCID: this.crowdfundingForm.controls['fundingCID'].value,
+				amountToRaise: ethers.utils.parseEther(this.crowdfundingForm.controls['amountToRaise'].value),
+				value: ethers.utils.parseEther(this.crowdfundingForm.controls['value'].value),
+				duration: this.crowdfundingForm.controls['duration'].value,
+				signer,
+			};
+			const receipt = await this.apiService.createCrowdFundingContract(params);
+			this.isLoading = false;
+			console.log('🚀 onSubmit ~ receipt:', receipt);
+			if (receipt) {
+				alert(`Created a new campaign with address ${receipt.logs[0].address}!`);
+			}
+			this.closeDialog();
+		} else {
+			console.log('Form is invalid');
 		}
-		this.closeDialog();
 	}
 
 	closeDialog(): void {

@@ -32,13 +32,37 @@
 					<p>Campaign Duration: {{ campaign?.campaignDuration }}</p>
 				</mat-card-content>
 				<mat-card-content>
+					<p>Remaining Duration: {{ campaign?.remainingDuration }}</p>
+				</mat-card-content>
+				<mat-card-content>
 					<p>Campaign Target Amount: {{ campaign?.campaignTargetAmount }}</p>
 				</mat-card-content>
 				<mat-card-content>
 					<p>Funding CID: {{ campaign?.fundingCID }}</p>
 				</mat-card-content>
 				<mat-card-content>
-					<p>Number Of Donors: {{ campaign?.noOfDonors }}</p>
+					<p class="popup-list" (click)="openDonorsList(i)" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+						Number Of Donors: {{ campaign?.noOfDonors }}
+					</p>
+					<ng-template
+						cdkConnectedOverlay
+						cdkConnectedOverlayPanelClass="custom-popover"
+						cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+						[cdkConnectedOverlayHasBackdrop]="true"
+						[cdkConnectedOverlayOpen]="isPopoverOpen[i]"
+						[cdkConnectedOverlayOrigin]="trigger"
+						cdkConnectedOverlayWidth="500px"
+						(backdropClick)="isPopoverOpen[i] = false">
+						<mat-card>
+							<h3 style="padding-left: 20px">Donors lists</h3>
+							<mat-divider></mat-divider>
+							<mat-list>
+								<mat-list-item style="width: 100%" *ngFor="let donor of campaign.donorsList">
+									{{ donor.address + ': ' + donor.amount }}
+								</mat-list-item>
+							</mat-list>
+						</mat-card>
+					</ng-template>
 				</mat-card-content>
 				<mat-card-content>
 					<p>Received Donation: {{ campaign?.receivedDonation }}</p>
@@ -52,39 +76,47 @@
 					<p class="progress-bar-text">{{ campaign?.progressValue + ' / 100' }}</p>
 				</mat-card-content>
 				<mat-card-content>
-					<p>Last Milestone Details:</p>
-					<ul>
-						<li>Milestone CID: {{ campaign.currentMilestone.milestoneCID }}</li>
-						<li>Approved: {{ campaign.currentMilestone.approved }}</li>
-						<li>Voting Period: {{ campaign.currentMilestone.votingPeriod }}</li>
-						<li>Status: {{ campaign.currentMilestone.status }}</li>
-						<li>Votes: {{ campaign.currentMilestone.votes }}</li>
-					</ul>
+					<p>Has Campaign Ended: {{ campaign?.hasCampaignEnded }}</p>
 				</mat-card-content>
 				<mat-card-content>
-					<p>Has Campaign Ended: {{ campaign?.hasCampaignEnded }}</p>
+					<mat-tab-group [selectedIndex]="selectedMilestoneIndexes[i]" (selectedIndexChange)="onTabChange(i, $event)">
+						<mat-tab [label]="milestone.label" *ngFor="let milestone of campaign.milestones; let i = index">
+							<p>Milestone {{ i + 1 }} Details:</p>
+							<ul>
+								<li>Milestone CID: {{ milestone.milestoneCID }}</li>
+								<li>Approved: {{ milestone.approved }}</li>
+								<li>Voting Period: {{ milestone.votingPeriod }}</li>
+								<li>Remaining Period: {{ milestone.remainingVotingTime }}</li>
+								<li>Status: {{ milestone.status }}</li>
+								<li>Votes: {{ milestone.votes.length }}</li>
+							</ul>
+							<mat-card-actions *ngIf="milestone.status !== '--'">
+								<select #voteId>
+									<option *ngFor="let vote of voteOptions; let j = index" [value]="vote.value" [selected]="j == 0">
+										{{ vote.value }}
+									</option>
+								</select>
+								<button mat-button (click)="voteOnMilestone(campaign.campaignAddress, voteId.value, i + 1)">Vote Milestone</button>
+							</mat-card-actions>
+						</mat-tab>
+					</mat-tab-group>
 				</mat-card-content>
 				<div class="donate-vote-wrapper">
 					<mat-card-actions>
 						<input type="text" placeholder="Donate" #donationInput />
 						<button mat-button (click)="donate(campaign.campaignAddress, donationInput.value)">DONATE</button>
 					</mat-card-actions>
-
-					<mat-card-actions *ngIf="campaign.currentMilestone.status !== '--'">
-						<select #voteId>
-							<option *ngFor="let vote of voteOptions; let i = index" [value]="vote.code" [selected]="i == 0">
-								{{ vote.value }}
-							</option>
-						</select>
-						<button mat-button (click)="voteOnMilestone(campaign.campaignAddress, voteId.value)">Vote Milestone</button>
-					</mat-card-actions>
 				</div>
 				<div class="action">
 					<mat-card-actions>
-						<button mat-button (click)="openCreateMilestoneModal(campaign.campaignAddress)">Create Milestone</button>
+						<button mat-button (click)="openCreateMilestoneModal(campaign.campaignAddress, selectedMilestoneIndexes[i] + 1)">
+							Create Milestone
+						</button>
 					</mat-card-actions>
 					<mat-card-actions>
-						<button mat-button (click)="withdrawMilestone(campaign.campaignAddress)">Withdraw Milestone</button>
+						<button mat-button (click)="withdrawMilestone(campaign.campaignAddress, selectedMilestoneIndexes[i] + 1)">
+							Withdraw Milestone
+						</button>
 					</mat-card-actions>
 				</div>
 				<mat-card-actions *ngIf="false">

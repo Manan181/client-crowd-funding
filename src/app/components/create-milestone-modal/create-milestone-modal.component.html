@@ -7,14 +7,20 @@
 			<h4 class="modal-title">Milestone Form</h4>
 		</div>
 		<div class="modal-body">
-			<form (ngSubmit)="onSubmit()">
-				<label for="milestoneCID">Milestone CID:</label>
-				<input type="text" id="milestoneCID" [(ngModel)]="formData.milestoneCID" name="milestoneCID" required />
+			<form [formGroup]="milestoneForm" (ngSubmit)="onSubmit()">
+				<div class="form-group">
+					<label for="milestoneCID">Milestone CID:</label>
+					<input type="text" id="milestoneCID" formControlName="milestoneCID" />
+					<div *ngIf="milestoneForm.get('milestoneCID').hasError('required')">Milestone CID is required.</div>
+				</div>
 
-				<label for="votingPeriod">Voting Period:</label>
-				<input type="text" id="votingPeriod" [(ngModel)]="formData.votingPeriod" name="votingPeriod" required />
+				<div class="form-group">
+					<label for="votingPeriod">Voting Period:</label>
+					<input type="text" id="votingPeriod" formControlName="votingPeriod" />
+					<div *ngIf="milestoneForm.get('votingPeriod').hasError('required')">Voting Period is required.</div>
+				</div>
 
-				<button type="submit">Submit</button>
+				<button type="submit" [disabled]="!milestoneForm.valid">Submit</button>
 			</form>
 		</div>
 	</div>

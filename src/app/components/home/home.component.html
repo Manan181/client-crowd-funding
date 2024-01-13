@@ -96,9 +96,7 @@
 										{{ vote.value }}
 									</option>
 								</select>
-								<button mat-button (click)="voteOnMilestone(campaign.campaignAddress, voteId.value, i + 1)">
-									Vote Milestone
-								</button>
+								<button mat-button (click)="voteOnMilestone(campaign.campaignAddress, voteId.value, i + 1)">Vote Milestone</button>
 							</mat-card-actions>
 						</mat-tab>
 					</mat-tab-group>
@@ -111,7 +109,9 @@
 				</div>
 				<div class="action">
 					<mat-card-actions>
-						<button mat-button (click)="openCreateMilestoneModal(campaign.campaignAddress, selectedMilestoneIndexes[i] + 1)">Create Milestone</button>
+						<button mat-button (click)="openCreateMilestoneModal(campaign.campaignAddress, selectedMilestoneIndexes[i] + 1)">
+							Create Milestone
+						</button>
 					</mat-card-actions>
 					<mat-card-actions>
 						<button mat-button (click)="withdrawMilestone(campaign.campaignAddress, selectedMilestoneIndexes[i] + 1)">
